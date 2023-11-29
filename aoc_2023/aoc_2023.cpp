@@ -1,0 +1,55 @@
+// aoc_2023.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
+#include <iostream>
+
+#include "day_1.hpp"
+
+
+DayResult run_day(Solution&& day_solution) {
+    std::vector<std::string> input_data = day_solution.load_input();
+
+    return day_solution.resolve(input_data);
+}
+
+void table_header() {
+    std::cout << std::format(
+        "       | {}{:^20}{} | {}{:^20}{} | {}{:^12}{} | {}{:^12}{} | {}{:^12}{} | {}{:^12}{} | {}{:^12}{} |\n", 
+        COLORED(BOLDCYAN, "P1"),
+        COLORED(BOLDCYAN, "P2"), 
+        COLORED(BOLDCYAN, "Parse"), 
+        COLORED(BOLDCYAN, "Mean"), 
+        COLORED(BOLDCYAN, "Total"), 
+        COLORED(BOLDCYAN, "StdDev"), 
+        COLORED(BOLDCYAN, "Variance")
+    );
+}
+
+void run_all() {
+    std::vector<DayResult> results = {
+        run_day(Day1()),
+    };
+
+    table_header();
+
+    for (auto& result : results) {
+        std::cout << result;
+    }
+}
+
+void run_current_day() {
+    auto result = run_day(Day1());
+
+    table_header();
+    std::cout << result;
+}
+
+
+int main()
+{
+    run_current_day();
+    return 0;
+}
+
+
+//123
