@@ -1,7 +1,4 @@
-// aoc_2023.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include <iostream>
+﻿#include <iostream>
 
 #include "day_1.hpp"
 
@@ -25,6 +22,11 @@ void table_header() {
     );
 }
 
+void table_footer() {
+    std::cout << std::string(129, '-') << '\n';
+    std::cout << "Tries per day: " << BOLDMAGENTA << Solution::resolve_benchmark_tries << RESET << "\n";
+}
+
 void run_all() {
     std::vector<DayResult> results = {
         run_day(Day1()),
@@ -35,6 +37,8 @@ void run_all() {
     for (auto& result : results) {
         std::cout << result;
     }
+
+    table_footer();
 }
 
 void run_current_day() {
@@ -42,6 +46,7 @@ void run_current_day() {
 
     table_header();
     std::cout << result;
+    table_footer();
 }
 
 
@@ -50,6 +55,3 @@ int main()
     run_current_day();
     return 0;
 }
-
-
-//123

@@ -1,4 +1,4 @@
-#ifndef SOLUTION_HPP
+﻿#ifndef SOLUTION_HPP
 #define SOLUTION_HPP
 #pragma once
 
@@ -37,6 +37,7 @@ namespace chrono = std::chrono;
 namespace rv = std::ranges::views;
 
 using SolutionReturn_T = std::tuple<std::string, std::string>;
+using SolutionInput_T = std::vector<std::string>&;
 using Duration_T = chrono::duration<double, std::milli>;
 
 
@@ -90,7 +91,6 @@ public:
 
 		std::string line;
 		while (std::getline(file, line)) {
-			//std::cout << "read " << line << "\n";
 			parsed.push_back(line);
 		}
 
@@ -102,7 +102,7 @@ public:
 	};
 
 	// benchmarking wrapper around solutions
-	virtual DayResult resolve(std::vector<std::string>& solution_input) {
+	virtual DayResult resolve(SolutionInput_T solution_input) {
 		std::vector<double> resolve_durations;
 		resolve_durations.reserve(resolve_benchmark_tries);
 
@@ -128,8 +128,8 @@ public:
 
 	int day_num = -1;
 	double time_in_parsing = -1.;
+	static const int resolve_benchmark_tries = 10000;
 private:
-	const int resolve_benchmark_tries = 1000;
 
 	virtual SolutionReturn_T _get_solutions(std::vector<std::string>& solution_input) { return std::make_tuple("~", "~"); };
 };

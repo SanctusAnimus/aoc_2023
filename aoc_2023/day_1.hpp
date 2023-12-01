@@ -4,6 +4,10 @@
 #include "solution.hpp"
 #include <array>
 
+static const std::array<std::string, 9> words {
+	"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
+};
+
 
 class Day1 : public Solution {
 public:
@@ -12,41 +16,93 @@ public:
 	};
 
 private:
-	SolutionReturn_T _get_solutions(std::vector<std::string>& solution_input) {
-		//std::cout << "day 1 getting solutions\n";
+	inline bool is_digit(const char& c) {
+		return c > 47 && c < 58;
+	}
 
-		std::vector<int> elf_values;
-		int current_elf_value = 0;
+	inline bool is_starting_for_word(const char& c) {
+		return c == 'o' || c == 't' || c == 'f' || c == 's' || c == 'e' || c == 'n';
+	}
 
-		//std::cout << solution_input.size();
+	inline std::tuple<size_t, size_t> array_section_size(const char& c) {
+		// how many words for a given char, and at which index in array they start
+		switch (c) {
+			case 'o': return { 1, 0 };
+			case 't': return { 2, 1 };
+			case 'f': return { 2, 3 };
+			case 's': return { 2, 5 };
+			case 'e': return { 1, 7 };
+			case 'n': return { 1, 8 };
+			default:
+				return { 0, 0 };
+		}
+	}
 
-		for (const auto& m_value : solution_input) {
-			//std::cout << "reading " << m_value << "\n";
-			if (m_value.empty() || m_value == "\n") {
-				//std::cout << "empty line encountered\n";
-				elf_values.push_back(current_elf_value);
+	SolutionReturn_T _get_solutions(SolutionInput_T solution_input) override {
+		unsigned int p1_value = 0;
+		unsigned int p2_value = 0;
 
-				current_elf_value = 0;
+		for (const auto& line : solution_input) {
+			unsigned int p1_first_digit = -1;
+			unsigned int p1_last_digit = -1;
+
+			unsigned int p2_first_digit = -1;
+			unsigned int p2_last_digit = -1;
+
+			for (int i = 0; i < line.size(); i++) {
+				const char& c = line[i];
+
+				if (is_digit(c)) {
+					unsigned int parsed_digit = c - '0';
+
+					if (p1_first_digit == -1) p1_first_digit = parsed_digit;
+					if (p2_first_digit == -1) p2_first_digit = parsed_digit;
+
+					p1_last_digit = parsed_digit;
+					p2_last_digit = parsed_digit;
+
+					continue;
+				}
+
+				size_t line_size = line.size();
+
+				if (i <= line_size - 3 && is_starting_for_word(c)) {
+					auto [section_size, index] = array_section_size(c);
+
+					if (section_size == 1) {
+						const std::string& word = words[index];
+						size_t word_length = word.size();
+
+						if ((i + word_length) <= line_size && std::string_view(line).substr(i, word_length) == word) {
+							i += word_length - 2;
+
+							if (p2_first_digit == -1) p2_first_digit = index + 1;
+							p2_last_digit = index + 1;
+						}
+					}
+					else {
+						for (int word_index = index; word_index < index + section_size; word_index++) {
+							const std::string& word = words[word_index];
+							size_t word_length = word.size();
+
+							if ((i + word_length) <= line_size && std::string_view(line).substr(i, word_length) == word) {
+								i += word_length - 2;
+
+								if (p2_first_digit == -1) p2_first_digit = word_index + 1;
+								p2_last_digit = word_index + 1;
+								break;
+							}
+						}
+					}
+				}
 			}
 
-			int parsed_value = 0;
-			auto [ptr, ec] = std::from_chars(m_value.data(), m_value.data() + m_value.size(), parsed_value);
-			current_elf_value += parsed_value;
-
-			//std::cout << parsed_value << "\n";
+			p1_value += (10 * p1_first_digit + p1_last_digit);
+			p2_value += (10 * p2_first_digit + p2_last_digit);
 		}
 
-		if (elf_values.size() == 0) {
-			return std::make_tuple("1", "2");
-		}
-
-		int max_value = *std::max_element(elf_values.begin(), elf_values.end());
-		std::ranges::sort(elf_values, std::greater<>());
-		int sum_values = elf_values[0] + elf_values[1] + elf_values[2];
-
-		return std::make_tuple(std::to_string(max_value), std::to_string(sum_values));
-
-		//return std::make_tuple(std::to_string(m / 23.0), std::to_string(m));
+		// 54331 - 54518
+		return std::make_tuple(std::to_string(p1_value), std::to_string(p2_value));
 	}
 };
 
