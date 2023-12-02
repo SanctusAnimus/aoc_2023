@@ -21,7 +21,8 @@ private:
 	inline bool p1_below_limit(const char& color, unsigned int num) {
 		return color == 'r' ? num <= p1_limit_red 
 			 : color == 'g' ? num <= p1_limit_green 
-			 : color == 'b' ? num <= p1_limit_blue : false;
+			 : color == 'b' ? num <= p1_limit_blue 
+			 : false;
 	}
 
 	inline std::tuple<unsigned int, size_t> parse_game_id(const std::string& line) {
@@ -51,45 +52,42 @@ private:
 				const char& c = line[i];
 
 				bool reading_digit = is_digit(c);
+				if (!reading_digit) continue;
+
 				bool next_is_digit = is_digit(line[i + 1]);
 
 				unsigned int num = 0;
 				unsigned int offset = 2;
 
-				// for our exact case cube number is up to 2 digits long
-				// so doing parsing manually
-				// otherwise would have to use find again
-				if (reading_digit) {
-					if (next_is_digit) {
-						offset += 1;
-						num = 10 * (c - '0') + (line[i + 1] - '0');
-					}
-					else {
-						num = c - '0';
-					}
-
-					i += offset; // step over whitespace and digit parts into color first letter
-
-					const char& color = line[i];
-
-					if (!p1_below_limit(color, num)) {
-						valid_game = false;
-					}
-
-					switch (color) {
-						case 'r':
-							if (num > max_red) max_red = num;
-							break;
-						case 'g':
-							if (num > max_green) max_green = num;
-							break;
-						case 'b':
-							if (num > max_blue) max_blue = num;
-							break;
-					}
-
-					i += 4; // step over color word (part of it, minimal for <red, >)
+				if (next_is_digit) {
+					offset += 1;
+					num = 10 * (c - '0') + (line[i + 1] - '0');
 				}
+				else {
+					num = c - '0';
+				}
+
+				i += offset; // step over whitespace and digit parts into color first letter
+
+				const char& color = line[i];
+
+				if (!p1_below_limit(color, num)) {
+					valid_game = false;
+				}
+
+				switch (color) {
+					case 'r':
+						if (num > max_red) max_red = num;
+						break;
+					case 'g':
+						if (num > max_green) max_green = num;
+						break;
+					case 'b':
+						if (num > max_blue) max_blue = num;
+						break;
+				}
+
+				i += 4; // step over color word (part of it, minimal for <red, >)
 			}
 
 			if (valid_game) p1_result += game_id;

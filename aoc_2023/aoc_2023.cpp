@@ -12,12 +12,11 @@ DayResult run_day(Solution&& day_solution) {
 
 void table_header() {
     std::cout << std::format(
-        "       | {}{:^20}{} | {}{:^20}{} | {}{:^12}{} | {}{:^12}{} | {}{:^12}{} | {}{:^12}{} | {}{:^12}{} |\n", 
+        "       | {}{:^20}{} | {}{:^20}{} | {}{:^12}{} | {}{:^12}{} | {}{:^12}{} | {}{:^12}{} |\n", 
         COLORED(BOLDCYAN, "P1"),
         COLORED(BOLDCYAN, "P2"), 
         COLORED(BOLDCYAN, "Parse"), 
-        COLORED(BOLDCYAN, "Mean"), 
-        COLORED(BOLDCYAN, "Total"), 
+        COLORED(BOLDCYAN, "Mean"),
         COLORED(BOLDCYAN, "StdDev"), 
         COLORED(BOLDCYAN, "Variance")
     );

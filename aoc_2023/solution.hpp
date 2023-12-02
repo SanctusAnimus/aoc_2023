@@ -58,8 +58,8 @@ struct DayResult {
 
 	friend std::ostream& operator<<(std::ostream& os, DayResult& node) {
 		os << std::format(
-			"{}Day {:>2}{} | {:>20} | {:>20} | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms |\n",
-			COLORED(GREEN, node.day_num), node.p1, node.p2, node.time_in_parsing, node.time_resolve_mean, node.time_resolve_total, node.time_resolve_stddev, node.time_resolve_variance
+			"{}Day {:>2}{} | {:>20} | {:>20} | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms |\n",
+			COLORED(GREEN, node.day_num), node.p1, node.p2, node.time_in_parsing, node.time_resolve_mean, node.time_resolve_stddev, node.time_resolve_variance
 		);
 
 		return os;
