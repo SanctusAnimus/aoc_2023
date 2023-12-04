@@ -3,6 +3,7 @@
 #include "day_1.hpp"
 #include "day_2.hpp"
 #include "day_3.hpp"
+#include "day_4.hpp"
 
 
 DayResult run_day(Solution&& day_solution) {
@@ -33,6 +34,7 @@ void run_all() {
         run_day(Day1()),
         run_day(Day2()),
         run_day(Day3()),
+        run_day(Day4()),
     };
 
     table_header();
@@ -45,7 +47,7 @@ void run_all() {
 }
 
 void run_current_day() {
-    auto result = run_day(Day3());
+    auto result = run_day(Day4());
 
     table_header();
     std::cout << result;

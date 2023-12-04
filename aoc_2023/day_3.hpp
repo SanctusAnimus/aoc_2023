@@ -153,7 +153,9 @@ private:
 					p2_calculate_row_for_gear(numbers[m_line_no + 1], gear, gear_connections, gear_product);
 				}
 
-				if (gear_connections == 2) p2_result += gear_product;
+				if (gear_connections == 2) {
+					p2_result += gear_product;
+				}
 			}
 		}
 
