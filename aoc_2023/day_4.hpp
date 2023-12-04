@@ -16,10 +16,6 @@ public:
 	};
 
 private:
-	inline bool is_digit(const char& c) {
-		return c > 47 && c < 58;
-	}
-
 	SolutionReturn_T _get_solutions(SolutionInput_T solution_input) {
 		unsigned int p1_result = 0;
 		unsigned int p2_result = 0;
@@ -27,54 +23,63 @@ private:
 		size_t row_no = 0;
 		size_t input_size = solution_input.size();
 
+		const unsigned int winner_sequence_count = 10;
+
+		unsigned int* win_numbers = new unsigned int[winner_sequence_count];
+		
 		std::vector<unsigned int> cards_counts;
 		cards_counts.resize(input_size, 1);
 
-		std::unordered_set<unsigned int> winning_numbers;
+		size_t offset = solution_input[0].find(':') + 2;
+		size_t line_size = solution_input[0].size();
 
 		for (const auto& line : solution_input) {
 			bool done_reading_winning_side = false;
-			unsigned int line_value = 0;
+			const char* parse_ptr = line.data() + offset;
+			const char* end = line.data() + line_size;
 
-			size_t card_num_offset = 3;
+			size_t winners_counter = 0;
+			size_t guess_counter = 0;
 
-			unsigned int line_matches = 0;
-			for (size_t char_no = 6 + card_num_offset; char_no < line.size(); char_no++) {
-				const char& c = line[char_no];
+			unsigned int match_counter = 0;
 
-				if (c == '|') {
+			do {
+				unsigned int parsed = 0;
+
+				if (*parse_ptr == '|') {
 					done_reading_winning_side = true;
-					char_no++;
-					continue;
+					parse_ptr += 2;
 				}
 
-				if (is_digit(c)) {
-					unsigned int parsed_num = 0;
-					do {
-						parsed_num = parsed_num * 10 + (line[char_no++] - '0');
-					} while (is_digit(line[char_no]));
+				auto [ptr, ec] = std::from_chars(parse_ptr, parse_ptr + 2, parsed);
 
+				if (ec == std::errc()) {
 					if (!done_reading_winning_side) {
-						winning_numbers.insert(parsed_num);
+						win_numbers[winners_counter++] = parsed;
 					}
-					else if (winning_numbers.contains(parsed_num)) {
-						line_matches++;
-						line_value = line_value == 0 ? 1 : line_value * 2;
+					else {
+						for (int i = 0; i < winner_sequence_count; i++) {
+							if (win_numbers[i] == parsed) {
+								match_counter++;
+								break;
+							}
+						}
 					}
 				}
+
+				parse_ptr = ptr + 1;
+
+				if (parse_ptr - line.data() >= line_size) break;
+			} while (1);
+
+			unsigned int current_card_count = cards_counts[row_no];
+			for (int i = row_no + 1; i <= row_no + match_counter; i++) {
+				cards_counts[i] += current_card_count;
 			}
 
-			if (line_matches > 0) {
-				unsigned int current_card_count = cards_counts[row_no];
-
-				for (unsigned int i = row_no + 1; i < std::min(row_no + line_matches + 1, input_size); i++) {
-					cards_counts[i] += current_card_count;
-				}
-			}
+			p1_result += match_counter == 0 ? 0 : 0x01 << (match_counter - 1);
 
 			row_no++;
-			p1_result += line_value;
-			winning_numbers.clear();
 		}
 
 		p2_result = std::accumulate(cards_counts.begin(), cards_counts.end(), 0);
