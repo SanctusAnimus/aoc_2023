@@ -43,35 +43,33 @@ using Duration_T = chrono::duration<double, std::milli>;
 
 double variance_from(const std::vector<double>& samples, double mean, int size);
 
-
-struct DayResult {
-	int day_num = -1;
-
-	std::string p1;
-	std::string p2;
-
-	double time_in_parsing = 0.0;
-	double time_resolve_mean = 0.0;
-	double time_resolve_total = 0.0;
-	double time_resolve_stddev = 0.0;
-	double time_resolve_variance = 0.0;
-
-	friend std::ostream& operator<<(std::ostream& os, DayResult& node) {
-		os << std::format(
-			"{}Day {:>2}{} | {:>20} | {:>20} | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms |\n",
-			COLORED(GREEN, node.day_num), node.p1, node.p2, node.time_in_parsing, node.time_resolve_mean, node.time_resolve_stddev, node.time_resolve_variance
-		);
-
-		return os;
-	}
-};
-
-
+template<typename T>
 class Solution {
 public:
+	struct DayResult {
+		int day_num = -1;
+
+		T::Result_T answer;
+
+		double time_in_parsing = 0.0;
+		double time_resolve_mean = 0.0;
+		double time_resolve_total = 0.0;
+		double time_resolve_stddev = 0.0;
+		double time_resolve_variance = 0.0;
+
+		friend std::ostream& operator<<(std::ostream& os, DayResult& node) {
+			os << std::format(
+				"{}Day {:>2}{} | {:>20} | {:>20} | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms |\n",
+				COLORED(GREEN, node.day_num), node.answer.first, node.answer.second, node.time_in_parsing, node.time_resolve_mean, node.time_resolve_stddev, node.time_resolve_variance
+			);
+
+			return os;
+		}
+	};
+
 	std::string get_file_path() const { return std::format("data_source/day_{}.txt", day_num); };
 
-	virtual std::vector<std::string> load_input() {
+	std::vector<std::string> load_input() {
 		auto parse_start = chrono::high_resolution_clock::now();
 
 		const auto file_path = get_file_path();
@@ -102,14 +100,16 @@ public:
 	};
 
 	// benchmarking wrapper around solutions
-	virtual DayResult resolve(SolutionInput_T solution_input) {
+	auto resolve(SolutionInput_T solution_input) {
+		DayResult res = { day_num };
+
 		std::vector<double> resolve_durations;
 		resolve_durations.reserve(resolve_benchmark_tries);
 
 		// this is just for benchmarking
 		for (int i = 0; i < resolve_benchmark_tries; i++) {
 			auto resolve_start = chrono::high_resolution_clock::now();
-			const auto [p1, p2] = _get_solutions(solution_input);
+			static_cast<T*>(this)->_get_solutions(solution_input);
 			auto resolve_end = chrono::high_resolution_clock::now();
 
 			Duration_T time_resolving = resolve_end - resolve_start;
@@ -121,17 +121,21 @@ public:
 		double variance = variance_from(resolve_durations, time_mean, resolve_benchmark_tries);
 		double stddev = sqrt(variance);
 
-		auto [p1, p2] = _get_solutions(solution_input);
+		res.answer = static_cast<T*>(this)->_get_solutions(solution_input);
 
-		return { day_num, p1, p2, time_in_parsing, time_mean, time_took_total, stddev, variance };
+		res.time_in_parsing = time_in_parsing;
+		res.time_resolve_mean = time_mean;
+		res.time_resolve_total = time_took_total;
+		res.time_resolve_stddev = stddev;
+		res.time_resolve_variance = variance;
+
+		return res;
 	};
 
 	int day_num = -1;
 	double time_in_parsing = -1.;
 	static const int resolve_benchmark_tries = 10000;
 private:
-
-	virtual SolutionReturn_T _get_solutions(std::vector<std::string>& solution_input) { return std::make_tuple("~", "~"); };
 };
 
 #endif // !SOLUTION_HPP

@@ -4,9 +4,10 @@
 #include "day_2.hpp"
 #include "day_3.hpp"
 #include "day_4.hpp"
+#include "day_5.hpp"
 
 
-DayResult run_day(Solution&& day_solution) {
+auto run_day(auto&& day_solution) {
     std::vector<std::string> input_data = day_solution.load_input();
 
     return day_solution.resolve(input_data);
@@ -25,29 +26,30 @@ void table_header() {
 }
 
 void table_footer() {
-    std::cout << std::string(129, '-') << '\n';
-    std::cout << "Tries per day: " << BOLDMAGENTA << Solution::resolve_benchmark_tries << RESET << "\n";
+    std::cout << std::string(109, '-') << '\n';
+    std::cout << "Tries per day: " << BOLDMAGENTA << 10000 << RESET << "\n";
 }
 
 void run_all() {
-    std::vector<DayResult> results = {
-        run_day(Day1()),
-        run_day(Day2()),
-        run_day(Day3()),
-        run_day(Day4()),
-    };
-
     table_header();
 
-    for (auto& result : results) {
-        std::cout << result;
-    }
+    auto r_d1 = run_day(Day1());
+    auto r_d2 = run_day(Day2());
+    auto r_d3 = run_day(Day3());
+    auto r_d4 = run_day(Day4());
+    auto r_d5 = run_day(Day5());
+
+    std::cout << r_d1;
+    std::cout << r_d2;
+    std::cout << r_d3;
+    std::cout << r_d4;
+    std::cout << r_d5;
 
     table_footer();
 }
 
 void run_current_day() {
-    auto result = run_day(Day4());
+    auto result = run_day(Day5());
 
     table_header();
     std::cout << result;

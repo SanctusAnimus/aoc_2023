@@ -9,13 +9,14 @@
 
 namespace rv = std::ranges::views;
 
-class Day3 : public Solution {
+class Day3 : public Solution<Day3> {
 public:
 	Day3() {
 		day_num = 3;
 	};
 
-private:
+	using Result_T = std::pair<int, int>;
+
 	inline bool is_digit(const char& c) {
 		return c > 47 && c < 58;
 	}
@@ -67,7 +68,7 @@ private:
 		}
 	}
 
-	SolutionReturn_T _get_solutions(SolutionInput_T solution_input) {
+	Result_T _get_solutions(SolutionInput_T solution_input) {
 		unsigned int p1_result = 0;
 		unsigned int p2_result = 0;
 
@@ -160,7 +161,7 @@ private:
 		}
 
 		// 527144 - 81463996
-		return { std::to_string(p1_result), std::to_string(p2_result)};
+		return { p1_result, p2_result };
 	}
 };
 

@@ -9,14 +9,15 @@
 
 namespace rv = std::ranges::views;
 
-class Day4 : public Solution {
+class Day4 : public Solution<Day4> {
 public:
 	Day4() {
 		day_num = 4;
 	};
 
-private:
-	SolutionReturn_T _get_solutions(SolutionInput_T solution_input) {
+	using Result_T = std::pair<int, int>;
+
+	Result_T _get_solutions(SolutionInput_T solution_input) {
 		unsigned int p1_result = 0;
 		unsigned int p2_result = 0;
 
@@ -84,8 +85,9 @@ private:
 
 		p2_result = std::accumulate(cards_counts.begin(), cards_counts.end(), 0);
 
+		delete[] win_numbers;
 		// 21213 - 8549735
-		return { std::to_string(p1_result), std::to_string(p2_result) };
+		return { p1_result, p2_result };
 	}
 };
 

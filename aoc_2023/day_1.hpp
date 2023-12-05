@@ -9,13 +9,14 @@ static const std::array<std::string, 9> words {
 };
 
 
-class Day1 : public Solution {
+class Day1 : public Solution<Day1> {
 public:
 	Day1() {
 		day_num = 1;
 	};
 
-private:
+	using Result_T = std::pair<int, int>;
+
 	inline bool is_digit(const char& c) {
 		return c > 47 && c < 58;
 	}
@@ -38,7 +39,7 @@ private:
 		}
 	}
 
-	SolutionReturn_T _get_solutions(SolutionInput_T solution_input) override {
+	Result_T _get_solutions(SolutionInput_T solution_input) {
 		unsigned int p1_value = 0;
 		unsigned int p2_value = 0;
 
@@ -102,7 +103,7 @@ private:
 		}
 
 		// 54331 - 54518
-		return std::make_tuple(std::to_string(p1_value), std::to_string(p2_value));
+		return { p1_value, p2_value };
 	}
 };
 

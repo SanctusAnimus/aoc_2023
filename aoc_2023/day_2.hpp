@@ -7,13 +7,14 @@ static const unsigned int p1_limit_red = 12;
 static const unsigned int p1_limit_green = 13;
 static const unsigned int p1_limit_blue = 14;
 
-class Day2 : public Solution {
+class Day2 : public Solution<Day2> {
 public:
 	Day2() {
 		day_num = 2;
 	};
 
-private:
+	using Result_T = std::pair<int, int>;
+
 	inline bool is_digit(const char& c) {
 		return c > 47 && c < 58;
 	}
@@ -35,7 +36,7 @@ private:
 		return { result, to };
 	}
 
-	SolutionReturn_T _get_solutions(SolutionInput_T solution_input) override {
+	Result_T _get_solutions(SolutionInput_T solution_input) {
 		unsigned int p1_result = 0;
 		unsigned int p2_result = 0;
 
@@ -96,7 +97,7 @@ private:
 		}
 
 		// 2913 - 55593
-		return std::make_tuple(std::to_string(p1_result), std::to_string(p2_result));
+		return { p1_result, p2_result };
 	}
 };
 
