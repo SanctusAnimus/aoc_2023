@@ -149,6 +149,9 @@
     <ClInclude Include="day_4.hpp" />
     <ClInclude Include="day_5.hpp" />
     <ClInclude Include="day_6.hpp" />
+    <ClInclude Include="day_7.hpp" />
+    <ClInclude Include="day_8.hpp" />
+    <ClInclude Include="day_9.hpp" />
     <ClInclude Include="solution.hpp" />
   </ItemGroup>
   <ItemGroup>
