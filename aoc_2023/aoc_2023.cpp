@@ -9,6 +9,7 @@
 #include "day_7.hpp"
 #include "day_8.hpp"
 #include "day_9.hpp"
+#include "day_10.hpp"
 
 
 auto run_day(auto&& day_solution) {
@@ -37,28 +38,32 @@ void table_footer() {
 void run_all() {
     table_header();
 
-    auto r_d1 = run_day(Day1());
-    auto r_d2 = run_day(Day2());
-    auto r_d3 = run_day(Day3());
-    auto r_d4 = run_day(Day4());
-    auto r_d5 = run_day(Day5());
-    auto r_d6 = run_day(Day6());
-    auto r_d7 = run_day(Day7());
-    auto r_d8 = run_day(Day8());
-    auto r_d9 = run_day(Day9());
+    auto r_d01 = run_day(Day1());
+    auto r_d02 = run_day(Day2());
+    auto r_d03 = run_day(Day3());
+    auto r_d04 = run_day(Day4());
+    auto r_d05 = run_day(Day5());
+    auto r_d06 = run_day(Day6());
+    auto r_d07 = run_day(Day7());
+    auto r_d08 = run_day(Day8());
+    auto r_d09 = run_day(Day9());
+    auto r_d10 = run_day(Day10());
 
-    std::cout << r_d1;
-    std::cout << r_d2;
-    std::cout << r_d3;
-    std::cout << r_d4;
-    std::cout << r_d5;
-    std::cout << r_d7;
+    std::cout << r_d01;
+    std::cout << r_d02;
+    std::cout << r_d03;
+    std::cout << r_d04;
+    std::cout << r_d05;
+    std::cout << r_d07;
+    std::cout << r_d08;
+    std::cout << r_d09;
+    std::cout << r_d10;
 
     table_footer();
 }
 
 void run_current_day() {
-    auto result = run_day(Day9());
+    auto result = run_day(Day10());
 
     table_header();
     std::cout << result;

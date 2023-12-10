@@ -45,6 +45,9 @@
     <ClInclude Include="day_9.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="day_10.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="solution.cpp">

@@ -6,6 +6,9 @@
 
 #include <array>
 #include <cstdint>
+#include <algorithm>
+#include <execution>
+#include <numeric>
 
 
 class Day9 : public Solution<Day9> {
@@ -24,12 +27,10 @@ public:
 		std::cout << "\n";
 	}
 
-	std::pair<Row_T, int> parse_line(const std::string& line) {
+	int parse_line_into(const std::string& line, Row_T& row) {
 		size_t size = line.size();
 		int counter = 0;
 		const char* parse_ptr = line.data();
-
-		Row_T row{};
 
 		do {
 			intmax_t parsed = 0;
@@ -47,7 +48,7 @@ public:
 
 		} while (parse_ptr - line.data() < size);
 
-		return { row, counter };
+		return counter;
 	}
 
 	int p1_resolve_line(Row_T row, int item_count) {
@@ -62,7 +63,6 @@ public:
 			// if we're starting with 0, check that all values are 0 and break if true
 			if (row[0] == 0) {
 				bool finished = true;
-
 
 				for (int j = 1; j < item_count; j++) {
 					if (row[j] != 0) {
@@ -119,17 +119,57 @@ public:
 		return res;
 	}
 
-	Result_T _get_solutions(SolutionInput_T solution_input) {
+	// slightly more fancy, but slower
+	Result_T _get_solutions_old(SolutionInput_T solution_input) {
 		intmax_t p1_result = 0;
 		intmax_t p2_result = 0;
 
+		Row_T row{};
+
 		for (const auto& line : solution_input) {
-			auto [row, counter] = parse_line(line);
+			int counter = parse_line_into(line, row);
 			p1_result += p1_resolve_line(row, counter);
 			p2_result += p2_resolve_line(row, counter);
 		}
 
 		// 1757008019 - 995
+		return { p1_result, p2_result };
+	}
+
+	// direct and fast way
+	Result_T _get_solutions(SolutionInput_T solution_input) {
+		intmax_t p1_result = 0;
+		intmax_t p2_result = 0;
+
+		Row_T row{};
+
+		for (const auto& line : solution_input) {
+			int counter = parse_line_into(line, row);
+
+			p1_result += row[counter - 1];
+			p2_result += row[0];
+
+			int multiplier = -1;
+
+			do {
+				for (int i = 0; i < counter - 1; i++) {
+					row[i] = row[i + 1] - row[i];
+				}
+				counter--;
+
+				int start = row[0];
+				int end = row[counter - 1];
+
+				if (start == 0 && end == 0) break;
+
+				p1_result += end;
+				p2_result += start * multiplier;
+
+				multiplier *= -1;
+
+			} while (1);
+		}
+
 		return { p1_result, p2_result };
 	}
 };
