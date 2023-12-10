@@ -23,30 +23,12 @@ struct LoopNode_D10 {
 		return x == rhs.x && y == rhs.y;
 	}
 
-	int silly_hash() const {
-		return 100000 * y + x;
-	}
-
 	friend std::ostream& operator<<(std::ostream& os, const LoopNode_D10& node) {
 		os << "<LN: " << node.x << ":" << node.y << " : " << node.direction << ">";
 
 		return os;
 	}
 };
-
-bool point_in_poly(LoopNode_D10 point, std::vector<LoopNode_D10>& points) {
-	int nvert = points.size();
-	bool c = false;
-
-	for (int i = 0, j = nvert - 1; i < nvert; j = i++) {
-		if (((points[i].y >= point.y) != (points[j].y >= point.y)) &&
-			(point.x <= (points[j].x - points[i].x) * (point.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
-			)
-			c = !c;
-	}
-
-	return c;
-}
 
 
 class Day10 : public Solution<Day10> {
@@ -143,7 +125,7 @@ public:
 		return { {-1, -1, Up}, {-1, -1, Up} };
 	}
 
-	Direction_D10 get_new_direction(const char& c, Direction_D10& previous_direction) {
+	inline Direction_D10 get_new_direction(const char& c, Direction_D10& previous_direction) {
 		switch (c) {
 			case '|':
 				return previous_direction & Up ? Up : Down;
@@ -160,19 +142,27 @@ public:
 		}
 	}
 
-	LoopNode_D10 move_head(SolutionInput_T input, LoopNode_D10& head) {
+	void move_head(SolutionInput_T input, LoopNode_D10& head) {
 		const char& c = input[head.y][head.x];
 		Direction_D10 new_direction = get_new_direction(c, head.direction);
 
 		switch (new_direction) {
 			case Left: 
-				return { head.x - 1, head.y, Left };
+				head.x--;
+				head.direction = Left;
+				break;
 			case Right:
-				return { head.x + 1, head.y, Right };
+				head.x++;
+				head.direction = Right;
+				break;
 			case Up:
-				return { head.x, head.y - 1, Up };
+				head.y--;
+				head.direction = Up;
+				break;
 			case Down:
-				return { head.x, head.y + 1, Down };
+				head.y++;
+				head.direction = Down;
+				break;
 		}
 	}
 
@@ -210,7 +200,6 @@ public:
 			size_t pos = line.find('S');
 
 			if (pos != std::string::npos) {
-				//std::cout << "S found at " << pos << ":" << start_y << "\n";
 				start_x = pos;
 				break;
 			}
@@ -221,46 +210,39 @@ public:
 
 		auto [start_1, start_2] = build_loop_head(axis_to_letter(axis), start_x, start_y);
 
-		// loop parts starting from 1 and 2 respectively
-		std::vector<LoopNode_D10> path_1{ {start_x, start_y}, start_1 };
-		std::vector<LoopNode_D10> path_2{ start_2 };
-
-		do {
-			start_1 = move_head(solution_input, start_1);
-			start_2 = move_head(solution_input, start_2);
-
-			path_1.push_back(start_1);
-
-			if (start_1 != start_2) {
-				path_2.push_back(start_2);
-			}
-
-			p1_result++;
-		} while (start_1 != start_2);
-
-		// merge path 2 into path 1 backwards, so they form complete polygon
-		path_1.insert(path_1.end(), std::make_move_iterator(path_2.rbegin()), std::make_move_iterator(path_2.rend()));
-
 		std::unordered_set<int> known_nodes;
-		known_nodes.reserve(path_1.size());
-
 		int min_x = 99999, max_x = 0, min_y = 99999, max_y = 0;
 
-		// exclude edges, and narrow search range
-		for (const auto& node : path_1) {
-			known_nodes.insert(hash(node));
-
+		auto check_min_max = [&min_x, &min_y, &max_x, &max_y](LoopNode_D10& node) {
 			if (node.x < min_x) min_x = node.x;
 			else if (node.x > max_x) max_x = node.x;
 
 			if (node.y < min_y) min_y = node.y;
 			else if (node.y > max_y) max_y = node.y;
-		}
+			};
+
+		known_nodes.insert(hash(start_x, start_y));
+		known_nodes.insert(hash(start_1));
+		known_nodes.insert(hash(start_2));
+
+		do {
+			move_head(solution_input, start_1);
+			move_head(solution_input, start_2);
+
+			known_nodes.insert(hash(start_1));
+			known_nodes.insert(hash(start_2));
+
+			check_min_max(start_1);
+			check_min_max(start_2);
+
+			p1_result++;
+		} while (start_1 != start_2);
 
 		for (int y = min_y + 1; y < max_y; y++) {
-			int line_counter = 0;
 			for (int x = min_x + 1; x < max_x; x++) {
-				if (!known_nodes.contains(hash(x, y)) && in_polygon_fast(solution_input, known_nodes, x, y, min_x)) p2_result++;
+				if (!known_nodes.contains(hash(x, y)) && in_polygon_fast(solution_input, known_nodes, x, y, min_x)) {
+					p2_result++;
+				}
 			}
 		}
 	
