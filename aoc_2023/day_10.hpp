@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iterator>
 #include <unordered_set>
+#include <unordered_map>
+#include <set>
 
 enum Direction_D10 {
 	Left = 1, Right = 2, Up = 4, Down = 8
@@ -174,6 +176,28 @@ public:
 		}
 	}
 
+	bool in_polygon_fast(SolutionInput_T input, std::unordered_set<int>& path_points, int x, int y, int min_x) {
+		int counter = 0;
+
+		for (int i = min_x; i < x; ++i) {
+			const char& c = input[y][i];
+
+			bool is_enclosing = (c == '|' || c == 'L' || c == 'J');
+
+			if (is_enclosing && path_points.contains(hash(i, y))) counter++;
+		}
+
+		return counter % 2 == 1;
+	}
+
+	inline int hash(int x, int y) const {
+		return y * input_line_size + x;
+	}
+
+	inline int hash(const LoopNode_D10& node) const {
+		return node.y * input_line_size + node.x;
+	}
+
 	Result_T _get_solutions(SolutionInput_T solution_input) {
 		intmax_t p1_result = 1;
 		intmax_t p2_result = 0;
@@ -218,12 +242,13 @@ public:
 		path_1.insert(path_1.end(), std::make_move_iterator(path_2.rbegin()), std::make_move_iterator(path_2.rend()));
 
 		std::unordered_set<int> known_nodes;
+		known_nodes.reserve(path_1.size());
 
 		int min_x = 99999, max_x = 0, min_y = 99999, max_y = 0;
 
 		// exclude edges, and narrow search range
 		for (const auto& node : path_1) {
-			known_nodes.insert(node.silly_hash());
+			known_nodes.insert(hash(node));
 
 			if (node.x < min_x) min_x = node.x;
 			else if (node.x > max_x) max_x = node.x;
@@ -232,14 +257,10 @@ public:
 			else if (node.y > max_y) max_y = node.y;
 		}
 
-		// this is SLOW (42ms on my machine)
-		// might want to add faster solution later
-		for (int y = min_y; y < max_y; y++) {
-			for (int x = min_x; x < max_x; x++) {
-				if (!known_nodes.contains(100000 * y + x)) {
-					bool r = point_in_poly({ x, y }, path_1);
-					if (r) p2_result++;
-				}
+		for (int y = min_y + 1; y < max_y; y++) {
+			int line_counter = 0;
+			for (int x = min_x + 1; x < max_x; x++) {
+				if (!known_nodes.contains(hash(x, y)) && in_polygon_fast(solution_input, known_nodes, x, y, min_x)) p2_result++;
 			}
 		}
 	
@@ -247,7 +268,6 @@ public:
 		return { p1_result, p2_result };
 	}
 };
-
 
 
 #endif // !AOC_DAY_10
