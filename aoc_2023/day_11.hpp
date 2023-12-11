@@ -34,7 +34,7 @@ public:
 		v.resize(appropriate);
 	}
 
-	inline intmax_t get_shift_from(std::vector<int> source, int coordinate) {
+	inline intmax_t get_shift_from(std::vector<int>& source, int coordinate) {
 		// iterate backwards, and reduce shift from size to 0 gradually
 		intmax_t shift = source.size();
 
