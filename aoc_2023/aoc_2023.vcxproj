@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="day_1.hpp" />
     <ClInclude Include="day_10.hpp" />
+    <ClInclude Include="day_11.hpp" />
     <ClInclude Include="day_2.hpp" />
     <ClInclude Include="day_3.hpp" />
     <ClInclude Include="day_4.hpp" />

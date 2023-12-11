@@ -10,6 +10,7 @@
 #include "day_8.hpp"
 #include "day_9.hpp"
 #include "day_10.hpp"
+#include "day_11.hpp"
 
 
 auto run_day(auto&& day_solution) {
@@ -48,6 +49,7 @@ void run_all() {
     auto r_d08 = run_day(Day8());
     auto r_d09 = run_day(Day9());
     auto r_d10 = run_day(Day10());
+    auto r_d11 = run_day(Day11());
 
     std::cout << r_d01;
     std::cout << r_d02;
@@ -57,13 +59,13 @@ void run_all() {
     std::cout << r_d07;
     std::cout << r_d08;
     std::cout << r_d09;
-    std::cout << r_d10;
+    std::cout << r_d11;
 
     table_footer();
 }
 
 void run_current_day() {
-    auto result = run_day(Day10());
+    auto result = run_day(Day11());
 
     table_header();
     std::cout << result;
