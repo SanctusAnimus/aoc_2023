@@ -17,10 +17,6 @@ public:
 
 	using Result_T = std::pair<int, int>;
 
-	inline bool is_digit(const char& c) {
-		return c > 47 && c < 58;
-	}
-
 	inline std::tuple<unsigned int, size_t> next_number(std::string_view line, size_t start, size_t size) {
 		size_t end = line.find_first_not_of("0123456789", start);
 
@@ -94,7 +90,7 @@ public:
 				const char& c = line[char_no];
 				if (c == '\n') continue;
 
-				if (is_digit(c)) {
+				if (isdigit(c)) {
 					const auto [parsed_num, num_size] = next_number(line, char_no, line_size);
 					numbers[line_no].emplace_back(parsed_num, char_no, char_no + num_size - 1);
 

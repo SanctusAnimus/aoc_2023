@@ -146,6 +146,7 @@
     <ClInclude Include="day_1.hpp" />
     <ClInclude Include="day_10.hpp" />
     <ClInclude Include="day_11.hpp" />
+    <ClInclude Include="day_12.hpp" />
     <ClInclude Include="day_2.hpp" />
     <ClInclude Include="day_3.hpp" />
     <ClInclude Include="day_4.hpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="day_8.hpp" />
     <ClInclude Include="day_9.hpp" />
     <ClInclude Include="solution.hpp" />
+    <ClInclude Include="tuple_hash.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="aoc_2023.cpp" />

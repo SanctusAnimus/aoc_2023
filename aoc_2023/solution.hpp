@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <numeric>
 
+#include "tuple_hash.hpp"
+
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
 #define RED     "\033[31m"      /* Red */
@@ -134,7 +136,7 @@ public:
 
 	int day_num = -1;
 	double time_in_parsing = -1.;
-	static const int resolve_benchmark_tries = 10000;
+	static const int resolve_benchmark_tries = 100;
 private:
 };
 

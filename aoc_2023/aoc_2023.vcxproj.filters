@@ -51,6 +51,12 @@
     <ClInclude Include="day_11.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="day_12.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tuple_hash.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="solution.cpp">

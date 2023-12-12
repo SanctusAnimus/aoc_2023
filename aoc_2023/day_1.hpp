@@ -17,10 +17,6 @@ public:
 
 	using Result_T = std::pair<int, int>;
 
-	inline bool is_digit(const char& c) {
-		return c > 47 && c < 58;
-	}
-
 	inline bool is_starting_for_word(const char& c) {
 		return c == 'o' || c == 't' || c == 'f' || c == 's' || c == 'e' || c == 'n';
 	}
@@ -53,7 +49,7 @@ public:
 			for (int i = 0; i < line.size(); i++) {
 				const char& c = line[i];
 
-				if (is_digit(c)) {
+				if (isdigit(c)) {
 					unsigned int parsed_digit = c - '0';
 
 					if (p1_first_digit == -1) p1_first_digit = parsed_digit;

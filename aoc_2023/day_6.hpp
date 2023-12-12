@@ -14,10 +14,6 @@ public:
 
 	using Result_T = std::pair<int, int>;
 
-	inline bool is_digit(const char& c) {
-		return c > 47 && c < 58;
-	}
-
 	unsigned int parse_input_line_into(const std::string& line, std::array<unsigned int, 4>& target, long long int& p2_target) {
 		unsigned int num_index = 0;
 		int parsed_num = 0;
@@ -28,7 +24,7 @@ public:
 		do {
 			const char& c = line[char_index++];
 
-			if (is_digit(c)) {
+			if (isdigit(c)) {
 				parsed_num = parsed_num * 10 + c - '0';
 				p2_target = p2_target * 10 + c - '0';
  			}

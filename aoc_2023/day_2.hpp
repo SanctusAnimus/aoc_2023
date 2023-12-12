@@ -15,10 +15,6 @@ public:
 
 	using Result_T = std::pair<int, int>;
 
-	inline bool is_digit(const char& c) {
-		return c > 47 && c < 58;
-	}
-
 	inline bool p1_below_limit(const char& color, unsigned int num) {
 		return color == 'r' ? num <= p1_limit_red 
 			 : color == 'g' ? num <= p1_limit_green 
@@ -52,10 +48,10 @@ public:
 			for (size_t i = starting_offset + 1; i < line.size(); i++) {
 				const char& c = line[i];
 
-				bool reading_digit = is_digit(c);
+				bool reading_digit = isdigit(c);
 				if (!reading_digit) continue;
 
-				bool next_is_digit = is_digit(line[i + 1]);
+				bool next_is_digit = isdigit(line[i + 1]);
 
 				unsigned int num = 0;
 				unsigned int offset = 2;
