@@ -110,8 +110,9 @@ public:
 
 		// this is just for benchmarking
 		for (int i = 0; i < resolve_benchmark_tries; i++) {
+			std::vector<std::string> t = solution_input;
 			auto resolve_start = chrono::high_resolution_clock::now();
-			static_cast<T*>(this)->_get_solutions(solution_input);
+			static_cast<T*>(this)->_get_solutions(t);
 			auto resolve_end = chrono::high_resolution_clock::now();
 
 			Duration_T time_resolving = resolve_end - resolve_start;
@@ -136,7 +137,7 @@ public:
 
 	int day_num = -1;
 	double time_in_parsing = -1.;
-	static const int resolve_benchmark_tries = 10000;
+	static const int resolve_benchmark_tries = 100;
 private:
 };
 
