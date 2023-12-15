@@ -40,17 +40,19 @@ public:
 		for (int i = 1; i < buffer.size(); i++) {
 			// try moving all 0 upwards, if supposed place is .
 
-			// maybe consider stopping iteration once al rocks hit something?
 			int lines_traced = i;
+			bool moved = false;
 			do {
+				moved = false;
 				for (int j = 0; j < line_size; j++) {
 					if (buffer[lines_traced][j] == 'O' && buffer[lines_traced - 1][j] == '.') {
 						buffer[lines_traced - 1][j] = 'O';
 						buffer[lines_traced][j] = '.';
+						moved = true;
 					}
 				}
 				lines_traced--;
-			} while (lines_traced > 0);
+			} while (lines_traced > 0 && moved);
 		}
 	}
 
@@ -60,17 +62,19 @@ public:
 		for (int i = buffer.size() - 2; i >= 0; i--) {
 			// try moving all 0 downwards, if supposed place is .
 
-			// maybe consider stopping iteration once al rocks hit something?
 			int lines_traced = i;
+			bool moved = false;
 			do {
+				moved = false;
 				for (int j = 0; j < line_size; j++) {
 					if (buffer[lines_traced][j] == 'O' && buffer[lines_traced + 1][j] == '.') {
 						buffer[lines_traced + 1][j] = 'O';
 						buffer[lines_traced][j] = '.';
+						moved = true;
 					}
 				}
 				lines_traced++;
-			} while (lines_traced < buffer.size() - 1);
+			} while (lines_traced < buffer.size() - 1 && moved);
 		}
 	}
 
@@ -148,9 +152,10 @@ public:
 
 		unsigned repeating_pos = known_cycle_states.at(solution_input);
 		unsigned cycle_length = known_cycle_states.size() - repeating_pos;
-		//std::cout << "repeating pattern found at iteration " << repeating_pos << "\n";
 
 		unsigned remaining_iterations = (1000000000 - repeating_pos) % cycle_length;
+
+		//std::cout << "repeating pattern found at iteration " << repeating_pos << " with cycle length " << cycle_length << ", remaining iterations: " << remaining_iterations << "\n";
 		
 		for (int i = 0; i < remaining_iterations; i++) {
 			tilt_north(solution_input);

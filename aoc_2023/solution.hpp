@@ -137,7 +137,7 @@ public:
 
 	int day_num = -1;
 	double time_in_parsing = -1.;
-	static const int resolve_benchmark_tries = 100;
+	static const int resolve_benchmark_tries = 10000;
 private:
 };
 
