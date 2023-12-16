@@ -5,6 +5,8 @@
 #include <unordered_set>
 #include <fstream>
 #include <deque>
+#include <execution>
+#include <algorithm>
 
 class Day16 : public Solution<Day16> {
 public:
@@ -17,7 +19,7 @@ public:
 	// x y dx dy
 	using Beam_T = std::tuple<int, int, int, int>;
 
-	intmax_t do_raycast(SolutionInput_T solution_input, Beam_T&& start) {
+	intmax_t do_raycast(SolutionInput_T solution_input, Beam_T& start) {
 		size_t input_width = solution_input[0].size();
 		size_t input_height = solution_input.size();
 
@@ -99,30 +101,35 @@ public:
 		intmax_t p1_result = 0;
 		intmax_t p2_result = 0;
 		
-		p1_result = do_raycast(solution_input, {-1, 0, 1, 0});
+		Beam_T p1_beam = { -1, 0, 1, 0 };
+		p1_result = do_raycast(solution_input, p1_beam);
 
 		// p2
-
 		size_t columns_count = solution_input[0].size();
 		size_t rows_count = solution_input.size();
 
+		std::vector<Beam_T> starting_beams;
+		std::vector<intmax_t> energized_per_beam;
+		
 		// rows, left and right start
 		for (int i = 0; i < rows_count; i++) {
-			intmax_t result_left = do_raycast(solution_input, { -1, i, 1, 0 });
-			intmax_t result_right = do_raycast(solution_input, { columns_count, i, -1, 0 });
-
-			if (result_left > p2_result) p2_result = result_left;
-			if (result_right > p2_result) p2_result = result_right;
+			starting_beams.emplace_back(-1, i, 1, 0);
+			starting_beams.emplace_back(columns_count, i, -1, 0);
 		}
 
 		// columns, bottom and top start
 		for (int i = 0; i < columns_count; i++) {
-			intmax_t result_top = do_raycast(solution_input, { i, 0, 0, 1 });
-			intmax_t result_bottom = do_raycast(solution_input, { i, rows_count, 0, -1 });
-
-			if (result_top > p2_result) p2_result = result_top;
-			if (result_bottom > p2_result) p2_result = result_bottom;
+			starting_beams.emplace_back(i, 0, 0, 1);
+			starting_beams.emplace_back(i, rows_count, 0, -1);
 		}
+
+		energized_per_beam.resize(starting_beams.size(), 0);
+
+		std::transform(std::execution::par_unseq, starting_beams.begin(), starting_beams.end(), energized_per_beam.begin(), [this, &solution_input](Beam_T& beam) {
+			return this->do_raycast(solution_input, beam);
+		});
+
+		p2_result = *std::max_element(energized_per_beam.begin(), energized_per_beam.end());
 
 		// 7951 - 8148
 		return { p1_result, p2_result };
