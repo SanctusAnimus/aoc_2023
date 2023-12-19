@@ -27,12 +27,16 @@ namespace std
 class Day14 : public Solution<Day14> {
 public:
 	Day14() {
-		day_num = 14;
+		day_num = 14;		
+		// 103333 - 97241
+		p1_expected = 103333;
+		p2_expected = 97241;
+
+		resolve_benchmark_tries = 100;
 	};
 
-	using HashSet_T = std::unordered_map<std::vector<std::string>, unsigned>;
-
 	using Result_T = std::pair<intmax_t, intmax_t>;
+	using HashSet_T = std::unordered_map<std::vector<std::string>, unsigned>;
 
 	void tilt_north(SolutionInput_T buffer) {
 		size_t line_size = buffer[0].size();
@@ -155,8 +159,6 @@ public:
 
 		unsigned remaining_iterations = (1000000000 - repeating_pos) % cycle_length;
 
-		//std::cout << "repeating pattern found at iteration " << repeating_pos << " with cycle length " << cycle_length << ", remaining iterations: " << remaining_iterations << "\n";
-		
 		for (int i = 0; i < remaining_iterations; i++) {
 			tilt_north(solution_input);
 			tilt_west(solution_input);
@@ -166,7 +168,6 @@ public:
 
 		line_weight = solution_input.size();
 		for (const auto& line : solution_input) {
-			//std::cout << line << "\n";
 			for (const auto& c : line) {
 				if (c == 'O') p2_result += line_weight;
 			}

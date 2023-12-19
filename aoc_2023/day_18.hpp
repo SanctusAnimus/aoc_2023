@@ -8,6 +8,12 @@ class Day18 : public Solution<Day18> {
 public:
 	Day18() {
 		day_num = 18;
+
+		// 50465 - 82712746433310
+		p1_expected = 50465;
+		p2_expected = 82712746433310;
+
+		resolve_benchmark_tries = 10000;
 	};
 
 	using Result_T = std::pair<intmax_t, intmax_t>;

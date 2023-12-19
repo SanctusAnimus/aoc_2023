@@ -68,10 +68,14 @@ class Day7 : public Solution<Day7> {
 public:
 	Day7() {
 		day_num = 7;
+		// 248179786 - 247885995
+		p1_expected = 248179786;
+		p2_expected = 247885995;
+
+		resolve_benchmark_tries = 10000;
 	};
 
 	using Result_T = std::pair<int, int>;
-
 
 	inline int get_card_power(const char& c) {
 		switch (c) {
@@ -119,8 +123,6 @@ public:
 		}
 
 		std::sort(repeats.begin(), repeats.end(), std::greater<>());
-
-		//std::cout << "\t\tgetting hand kind: " << repeats[0] << " " << repeats[1] << '\n';
 
 		return hand_kind_from_repeats(repeats);
 	}

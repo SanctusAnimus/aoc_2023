@@ -8,10 +8,14 @@ class Day15 : public Solution<Day15> {
 public:
 	Day15() {
 		day_num = 15;
+		// 507769 - 269747
+		p1_expected = 507769;
+		p2_expected = 269747;
+
+		resolve_benchmark_tries = 10000;
 	};
 
 	using Result_T = std::pair<intmax_t, intmax_t>;
-
 
 	inline unsigned hash(std::string_view& s) {
 		unsigned current_hash_value = 0;
@@ -21,7 +25,6 @@ public:
 
 		return current_hash_value;
 	}
-
 
 	Result_T _get_solutions(SolutionInput_T solution_input) {
 		const std::string& line = solution_input[0];
@@ -93,7 +96,6 @@ public:
 
 					lens_index++;
 				}
-				//std::cout << "\n";
 			}
 			i++;
 		}

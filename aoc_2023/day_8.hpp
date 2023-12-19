@@ -20,6 +20,12 @@ public:
 	Day8() {
 		day_num = 8;
 		instructions_count = 0;
+
+		// 20513 - 15995167053923
+		p1_expected = 20513;
+		p2_expected = 15995167053923;
+
+		resolve_benchmark_tries = 10000;
 	};
 
 	using Result_T = std::pair<int, intmax_t>;
@@ -65,8 +71,6 @@ public:
 
 		// first line is the instruction set
 		// skip 1, and all next lines fill the map
-
-		//std::cout << "starting instruction buffer at " << instructions_count << "\n";
 		for (const auto& c : solution_input[0]) {
 			switch (c) {
 				case 'L':
@@ -106,8 +110,6 @@ public:
 
 			p2_result = std::lcm(p2_result, distance);
 		}
-
-		//std::cout << lcm(14893, 20513, 22199, 19951, 17141, 12083) << "\n";
 
 		// 20513 - 15995167053923
 		node_paths.clear();

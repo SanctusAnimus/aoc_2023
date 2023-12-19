@@ -28,6 +28,11 @@ class Day5 : public Solution<Day5> {
 public:
 	Day5() {
 		day_num = 5;
+
+		p1_expected = 525792406;
+		p2_expected = 79004094;
+
+		resolve_benchmark_tries = 10000;
 	};
 
 	using Result_T = std::pair<long long int, long long int>;

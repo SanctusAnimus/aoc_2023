@@ -9,10 +9,15 @@ class Day13 : public Solution<Day13> {
 public:
 	Day13() {
 		day_num = 13;
+
+		// 29130 - 33438
+		p1_expected = 29130;
+		p2_expected = 33438;
+
+		resolve_benchmark_tries = 10000;
 	};
 
 	using Result_T = std::pair<intmax_t, intmax_t>;
-
 	using StringBuffer_T = std::array<std::string_view, 30>;
 
 	// compare chars at indices for every line in a buffer, effectively comparing columns

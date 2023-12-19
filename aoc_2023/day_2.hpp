@@ -11,6 +11,11 @@ class Day2 : public Solution<Day2> {
 public:
 	Day2() {
 		day_num = 2;
+
+		p1_expected = 2913;
+		p2_expected = 55593;
+
+		resolve_benchmark_tries = 10000;
 	};
 
 	using Result_T = std::pair<int, int>;

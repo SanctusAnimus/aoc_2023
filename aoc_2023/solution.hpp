@@ -38,10 +38,12 @@
 namespace chrono = std::chrono;
 namespace rv = std::ranges::views;
 
-using SolutionReturn_T = std::tuple<std::string, std::string>;
 using SolutionInput_T = std::vector<std::string>&;
 using Duration_T = chrono::duration<double, std::milli>;
 
+enum AssertResult {
+	OK, Fail, Unchecked
+};
 
 double variance_from(const std::vector<double>& samples, double mean, int size);
 
@@ -50,6 +52,7 @@ class Solution {
 public:
 	struct DayResult {
 		int day_num = -1;
+		int resolve_benchmark_tries = 0;
 
 		T::Result_T answer;
 
@@ -59,10 +62,25 @@ public:
 		double time_resolve_stddev = 0.0;
 		double time_resolve_variance = 0.0;
 
-		friend std::ostream& operator<<(std::ostream& os, DayResult& node) {
+		AssertResult p1_check = Unchecked;
+		AssertResult p2_check = Unchecked;
+
+		friend std::ostream& operator<<(std::ostream& os, const DayResult& node) {
+			std::string p1_color = node.p1_check == Fail ? RED : node.p1_check == OK ? GREEN : YELLOW;
+			std::string p2_color = node.p2_check == Fail ? RED : node.p2_check == OK ? GREEN : YELLOW;
+
+			std::string mean_color = node.time_resolve_mean <= 1.0 ? WHITE : node.time_resolve_mean <= 5.0 ? YELLOW : RED;
+
 			os << std::format(
-				"{}Day {:>2}{} | {:>20} | {:>20} | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms | {:>10.5f}ms |\n",
-				COLORED(GREEN, node.day_num), node.answer.first, node.answer.second, node.time_in_parsing, node.time_resolve_mean, node.time_resolve_stddev, node.time_resolve_variance
+				"{}Day {:>2}{} ({}{:<6}{} tries) | {}{:>20}{} | {}{:>20}{} | {}{:>10.5f}{}ms | {:>10.5f}ms |\n",
+				COLORED(GREEN, node.day_num), 
+				COLORED(MAGENTA, node.resolve_benchmark_tries),
+				COLORED(p1_color, node.answer.first), 
+				COLORED(p2_color, node.answer.second), 
+				// node.time_in_parsing, 
+				COLORED(mean_color, node.time_resolve_mean),
+				node.time_resolve_stddev
+				// node.time_resolve_variance
 			);
 
 			return os;
@@ -75,19 +93,13 @@ public:
 		auto parse_start = chrono::high_resolution_clock::now();
 
 		const auto file_path = get_file_path();
-
-		//std::cout << "opening " << file_path << "\n";
-		
 		std::ifstream file(file_path);
 
 		if (!file.is_open()) {
 			std::cout << "file is not open!\n";
 		}
 
-		//std::string loaded_input{ std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{} };
 		std::vector<std::string> parsed;
-
-		//std::cout << "loading input\n";
 
 		std::string line;
 		while (std::getline(file, line)) {
@@ -103,7 +115,7 @@ public:
 
 	// benchmarking wrapper around solutions
 	auto resolve(SolutionInput_T solution_input) {
-		DayResult res = { day_num };
+		DayResult res = { day_num, resolve_benchmark_tries };
 
 		std::vector<double> resolve_durations;
 		resolve_durations.reserve(resolve_benchmark_tries);
@@ -132,13 +144,18 @@ public:
 		res.time_resolve_stddev = stddev;
 		res.time_resolve_variance = variance;
 
+		if (p1_expected != INT64_MIN) res.p1_check = (res.answer.first == p1_expected) ? OK : Fail;
+		if (p2_expected != INT64_MIN) res.p2_check = (res.answer.second == p2_expected) ? OK : Fail;
+
 		return res;
 	};
 
 	int day_num = -1;
 	double time_in_parsing = -1.;
-	static const int resolve_benchmark_tries = 10000;
-private:
+	int resolve_benchmark_tries = 100;
+
+	intmax_t p1_expected = INT64_MIN;
+	intmax_t p2_expected = INT64_MIN;
 };
 
 #endif // !SOLUTION_HPP
