@@ -155,6 +155,7 @@
     <ClInclude Include="day_18.hpp" />
     <ClInclude Include="day_19.hpp" />
     <ClInclude Include="day_2.hpp" />
+    <ClInclude Include="day_20.hpp" />
     <ClInclude Include="day_3.hpp" />
     <ClInclude Include="day_4.hpp" />
     <ClInclude Include="day_5.hpp" />

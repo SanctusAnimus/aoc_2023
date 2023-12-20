@@ -19,6 +19,7 @@
 #include "day_17.hpp"
 #include "day_18.hpp"
 #include "day_19.hpp"
+#include "day_20.hpp"
 
 
 auto run_day(auto&& day_solution) {
@@ -74,7 +75,7 @@ void run_all() {
 }
 
 void run_current_day() {
-    auto result = run_day(Day19());
+    auto result = run_day(Day20());
 
     table_header();
     table_separator();
@@ -85,7 +86,7 @@ void run_current_day() {
 
 int main()
 {
-    // run_current_day();
-    run_all();
+    run_current_day();
+    // run_all();
     return 0;
 }
